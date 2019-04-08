@@ -7,6 +7,7 @@ int btn3;
 int btn4;
 int btn5;
 int btnStart;
+int btnRecord;
                                       //  variabili numeriche
 int vite;
 int punti;
@@ -18,20 +19,22 @@ void setup(){
   lcd.init();
   lcd.backlight();
                                       //  bottoni
-  btn1     = 2;
-  btn2     = 3;
-  btn3     = 4;
-  btn4     = 5;
-  btn5     = 6;
-  btnStart = 7;
-  record   = 0;
+  btn1      = 7;
+  btn2      = 6;
+  btn3      = 5;
+  btn4      = 4;
+  btn5      = 3;
+  btnStart  = 12;
+  btnRecord = 11;
+  record    = 0;
                                       //  pinMode di input
-  pinMode(btn1,     INPUT);
-  pinMode(btn2,     INPUT);
-  pinMode(btn3,     INPUT);
-  pinMode(btn4,     INPUT);
-  pinMode(btn5,     INPUT);
-  pinMode(btnStart, INPUT);
+  pinMode(btn1,      INPUT);
+  pinMode(btn2,      INPUT);
+  pinMode(btn3,      INPUT);
+  pinMode(btn4,      INPUT);
+  pinMode(btn5,      INPUT);
+  pinMode(btnStart,  INPUT);
+  pinMode(btnRecord, INPUT);
   
   lcd.print("Premi per");
   lcd.setCursor(0, 1);
@@ -71,7 +74,6 @@ void stampaPiGreco(){
   
   lcd.clear(); 
   if (vite >= 0){stampa(String(vite), String(punti));}
-  else{lcd.print("Hai perso!");}
 }
 
 
@@ -81,12 +83,21 @@ void loop() {
   tempo = 1500;
                                       //  btn inizio
   while(digitalRead(btnStart)  == LOW){
-    if (digitalRead(btn1) == HIGH){
+    if (digitalRead(btnRecord) == HIGH){
       lcd.clear();
       lcd.print("Record: " + String(record) + "pt");
-      while (digitalRead(btn1) == LOW){}
+      delay(400);
+      while (digitalRead(btnRecord) == LOW){}
+      delay(200);
+      lcd.clear();
+      stampa(String(vite), String(punti));
     }
   }
+  lcd.clear();
+  lcd.print("Gioco iniziato");
+  lcd.setCursor(0, 1);
+  lcd.print("Preparati!");
+  delay(2500);
   lcd.clear();
   stampa(String(vite), String(punti));
                                       //  con un random scelgo se far apparire bonus o mauls, in questo caso il 15% circa delle partite
@@ -125,8 +136,6 @@ void loop() {
   
       lcd.clear(); 
       if (vite >= 0){stampa(String(vite), String(punti));}
-      else{lcd.print("Hai perso!");}
-
       
     }else if (random(1, 8) == 1){
       //stampaPiGreco();                //  con un random scelgo se far apparire bonus o mauls, in questo caso il 15% circa delle partite
@@ -162,9 +171,7 @@ void loop() {
   
       lcd.clear(); 
       if (vite >= 0){stampa(String(vite), String(punti));}
-      else{lcd.print("Hai perso!");}
 
-      
     }else{
       stampaPiGreco();
     }
@@ -172,7 +179,10 @@ void loop() {
 
   if (punti > record){record = punti;}
 
-  delay(1500);
+  lcd.print("Hai perso!");
+  lcd.setCursor(0, 1);
+  lcd.print("Riprova");
+  delay(2500);
   lcd.clear();
   stampa("5", "0");
 }
