@@ -24,8 +24,8 @@ void setup(){
   btn3      = 5;
   btn4      = 4;
   btn5      = 3;
-  btnStart  = 12;
   btnRecord = 11;
+  btnStart  = 12;
   record    = 0;
                                       //  pinMode di input
   pinMode(btn1,      INPUT);
@@ -33,8 +33,8 @@ void setup(){
   pinMode(btn3,      INPUT);
   pinMode(btn4,      INPUT);
   pinMode(btn5,      INPUT);
-  pinMode(btnStart,  INPUT);
   pinMode(btnRecord, INPUT);
+  pinMode(btnStart,  INPUT);
   
   lcd.print("Premi per");
   lcd.setCursor(0, 1);
@@ -49,31 +49,58 @@ void stampa(String f1, String f2){
 }
 
 
-void stampaPiGreco(){
-  delay(1500);
+void avvisa(String f1, String f2, String vite, String punti){
+  lcd.clear();
+  lcd.print(f1);
+  lcd.setCursor(0, 1);
+  lcd.print(f2);
+  delay(2500);
+  lcd.clear();
+  stampa(vite, punti);
+}
+
+
+void stampaPiGreco(int posizione, bool bonus, String s){
+      delay(1500);
                                       //  Stampo il piGreco
-  int i = 0, premuto = 0, piGreco = (random(1, 6)* 3) - 2;
-  
-  lcd.setCursor(piGreco, 1);
-  lcd.print("π");
-  
-  while  (i < tempo && premuto == 0){
-    if      (digitalRead(btn1) == HIGH){premuto = 1;}
-    else if (digitalRead(btn2) == HIGH){premuto = 4;}
-    else if (digitalRead(btn3) == HIGH){premuto = 7;}
-    else if (digitalRead(btn4) == HIGH){premuto = 10;}
-    else if (digitalRead(btn5) == HIGH){premuto = 13;}
-    delay(1);
-    i++;
-  }
+      int i = 0, premuto = 0, piGreco = (random(1, 6)* 3) - 2;
 
-  if (premuto == piGreco){punti++;}
-  else{vite--; tempo += 50;}
-
-  tempo -= 50;
+      while(piGreco == posizione){piGreco = (random(1, 6)* 3) - 2;}
+      
+      lcd.setCursor(piGreco, 1);
+      lcd.print("π");
+      
+      lcd.setCursor(posizione, 1);
+      lcd.print(s);
   
-  lcd.clear(); 
-  if (vite >= 0){stampa(String(vite), String(punti));}
+      while  (i < tempo && premuto == 0){
+        if      (digitalRead(btn1) == HIGH){premuto = 1;}
+        else if (digitalRead(btn2) == HIGH){premuto = 4;}
+        else if (digitalRead(btn3) == HIGH){premuto = 7;}
+        else if (digitalRead(btn4) == HIGH){premuto = 10;}
+        else if (digitalRead(btn5) == HIGH){premuto = 13;}
+        delay(1);
+        i++;
+      }
+
+      if (premuto == posizione){
+        if (bonus == false){
+        punti--; 
+        tempo -= 50; 
+        vite--;
+        }else{
+          vite++;
+          tempo += 100;
+        }
+      }else if (premuto == piGreco){
+        punti++; 
+        if (tempo > 150)
+          tempo -= 50;
+      }else 
+        vite--;
+  
+      if (vite >= 0)
+        {lcd.clear(); stampa(String(vite), String(punti));}
 }
 
 
@@ -86,103 +113,23 @@ void loop() {
     if (digitalRead(btnRecord) == HIGH){
       lcd.clear();
       lcd.print("Record: " + String(record) + "pt");
-      delay(400);
+      delay(300);
       while (digitalRead(btnRecord) == LOW){}
-      delay(200);
       lcd.clear();
       stampa(String(vite), String(punti));
+      delay(300);
     }
   }
-  lcd.clear();
-  lcd.print("Gioco iniziato");
-  lcd.setCursor(0, 1);
-  lcd.print("Preparati!");
-  delay(2500);
-  lcd.clear();
-  stampa(String(vite), String(punti));
-                                      //  con un random scelgo se far apparire bonus o mauls, in questo caso il 15% circa delle partite
+  avvisa("Gioco iniziato", "preparati!", String(vite), String(punti));
   while(vite >= 0){
     if (random(1, 8) == 1){
-      //stampaPiGreco();                //  con un random scelgo se far apparire bonus o mauls, in questo caso il 15% circa delle partite
-
-      
-      delay(1500);
-                                      //  Stampo il piGreco
-      int i = 0, premuto = 0, piGreco = (random(1, 6)* 3) - 2, bonus = (random(1, 6)* 3) - 2;
-
-      while (bonus == piGreco){bonus = (random(1, 6)* 3) - 2;}
-      
-      lcd.setCursor(piGreco, 1);
-      lcd.print("π");
-      
-      lcd.setCursor(bonus, 1);
-      lcd.print("b");
-  
-      while  (i < tempo && premuto == 0){
-        if      (digitalRead(btn1) == HIGH){premuto = 1;}
-        else if (digitalRead(btn2) == HIGH){premuto = 4;}
-        else if (digitalRead(btn3) == HIGH){premuto = 7;}
-        else if (digitalRead(btn4) == HIGH){premuto = 10;}
-        else if (digitalRead(btn5) == HIGH){premuto = 13;}
-        delay(1);
-        i++;
-      }
-
-      if (premuto == bonus){vite++;}
-      else if (premuto == piGreco){punti++;}
-      else {vite--; tempo += 50;}
-
-      tempo -= 50;
-  
-      lcd.clear(); 
-      if (vite >= 0){stampa(String(vite), String(punti));}
-      
+      stampaPiGreco((random(1, 6) * 3) - 2, true, "b");
     }else if (random(1, 8) == 1){
-      //stampaPiGreco();                //  con un random scelgo se far apparire bonus o mauls, in questo caso il 15% circa delle partite
-
-      
-      delay(1500);
-                                      //  Stampo il piGreco
-      int i = 0, premuto = 0, piGreco = (random(1, 6)* 3) - 2, malus = (random(1, 6)* 3) - 2;
-
-      while (malus == piGreco){malus = (random(1, 6)* 3) - 2;}
-      
-      lcd.setCursor(piGreco, 1);
-      lcd.print("π");
-      
-      lcd.setCursor(malus, 1);
-      lcd.print("m");
-  
-      while  (i < tempo && premuto == 0){
-        if      (digitalRead(btn1) == HIGH){premuto = 1;}
-        else if (digitalRead(btn2) == HIGH){premuto = 4;}
-        else if (digitalRead(btn3) == HIGH){premuto = 7;}
-        else if (digitalRead(btn4) == HIGH){premuto = 10;}
-        else if (digitalRead(btn5) == HIGH){premuto = 13;}
-        delay(1);
-        i++;
-      }
-
-      if (premuto == malus){punti--;}
-      else if (premuto == piGreco){punti++;}
-      else {vite--; tempo += 50;}
-
-      tempo -= 50;
-  
-      lcd.clear(); 
-      if (vite >= 0){stampa(String(vite), String(punti));}
-
+      stampaPiGreco((random(1, 6) * 3) - 2, false, "m");
     }else{
-      stampaPiGreco();
+      stampaPiGreco(-1, false, "");
     }
   }
-
   if (punti > record){record = punti;}
-
-  lcd.print("Hai perso!");
-  lcd.setCursor(0, 1);
-  lcd.print("Riprova");
-  delay(2500);
-  lcd.clear();
-  stampa("5", "0");
+  avvisa("Hai perso!", "Riprova", "5", "0");
 }
