@@ -1,12 +1,12 @@
 #include <LiquidCrystal_I2C.h>
 LiquidCrystal_I2C lcd(0x27, 16, 2);
                                     //  creazione variabili di INPUT
-int  btn1;
-int  btn2;
-int  btn3;
-int  btn4;
-int  btn5;
-int  btnStart;
+#define  btn1     3
+#define  btn2     4
+#define  btn3     5
+#define  btn4     6
+#define  btn5     7
+#define  btnStart 12
                                     //  creazione variabili numeriche
 int  vite;
 int  punti;
@@ -22,12 +22,6 @@ void setup() {
   lcd.createChar(1, cuore);
                                     //  assegnazione variabili
   record   = 0;
-  btn1     = 3;
-  btn2     = 4;
-  btn3     = 5;
-  btn4     = 6;
-  btn5     = 7;
-  btnStart = 12;
                                     //  pinMode di input
   pinMode(btn1,     INPUT);
   pinMode(btn2,     INPUT);
@@ -93,13 +87,12 @@ void loop() {
   avvisa("Gioco iniziato", "preparati!");
                                             //  il ciclo si ripete fino a che l'utente non finisce le vite
   while (vite > 0) {
-    
     if (random(1, 9) == 1) {                //  BONUS che esce con probabilità del 14% circa (1 volta su 8)
-      stampaChar(1,  1, 1,  50,  0);
+      stampaChar(1, 1, 1,  50,  0);
     } else if (random(1, 9) == 1) {         //  MALUS che esce con probabilità del 14% circa (1 volta su 8)
       stampaChar('M', -1, 0, -40,  0);
     } else {                                //  PIGRECO che esce come alternativa a BONUS e MALUS che escono con meno probabilità
-      stampaChar(0,    0, 1, -40, -1);
+      stampaChar(0, 0, 1, -40, -1);
     }
                                             //  se l'utente non ha ancora finito le vite aggiorno vite e punti, altrimenti notifico che ha perso
     if (vite > 0) { stampa(vite, punti); } 
@@ -109,9 +102,12 @@ void loop() {
   if (punti > record) {
     record = punti;
     lcd.print("Nuovo record!");
-    lcd.setCursor(0, 1);
+  }
+  else{
+    lcd.print("Punteggio: " + String(punti));
   }
                                             //  stampo il record ogni fine turno per mostrarlo all'utente
+  lcd.setCursor(0, 1);
   lcd.print("Record: " + String(record));
   delay(2500);
 }
