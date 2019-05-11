@@ -14,12 +14,14 @@ int  tempo;
 int  record;                        //  creazione di un nuovo carattere per il piGreco
 byte piGreco[8] = { B00000, B00000, B11111, B01010, B01010, B01010, B01001, B00000 };
 byte cuore[8]   = { B00000, B01010, B11111, B11111, B11111, B01110, B00100, B00000 };
+byte teschio[8] = { B01110, B11111, B10101, B11111, B11111, B01110, B01110, B00000 };
 
 void setup() {
   lcd.init();
   lcd.backlight();
   lcd.createChar(0, piGreco);
   lcd.createChar(1, cuore);
+  lcd.createChar(2, teschio);
                                     //  assegnazione variabili
   record   = 0;
                                     //  pinMode di input
@@ -73,7 +75,7 @@ void stampaChar(char s, int incV, int incP, int incT, int incV1){
   }
 }
 
-void loop() {
+void loop() {                               //  ripristino vite, punti e tempo
   vite  = 5;
   punti = 0;
   tempo = 1200;
@@ -87,18 +89,18 @@ void loop() {
   avvisa("Gioco iniziato", "preparati!");
                                             //  il ciclo si ripete fino a che l'utente non finisce le vite
   while (vite > 0) {
-    if (random(1, 9) == 1) {                //  BONUS che esce con probabilità del 14% circa (1 volta su 8)
-      stampaChar(1, 1, 1,  50,  0);
-    } else if (random(1, 9) == 1) {         //  MALUS che esce con probabilità del 14% circa (1 volta su 8)
-      stampaChar('M', -1, 0, -40,  0);
-    } else {                                //  PIGRECO che esce come alternativa a BONUS e MALUS che escono con meno probabilità
-      stampaChar(0, 0, 1, -40, -1);
+    if (random(1, 9) == 1) {                //  -- BONUS -- che esce con probabilità del 14% circa (1 volta su 8)
+      stampaChar(1,  1,  1,  50,  0);
+    } else if (random(1, 9) == 1) {         //  -- MALUS -- che esce con probabilità del 14% circa (1 volta su 8)
+      stampaChar(2, -1, -2, -40,  0);
+    } else {                                //  -- PIGRECO -- che esce come alternativa a BONUS e MALUS che escono con meno probabilità
+      stampaChar(0,  0,  1, -40, -1);
     }
                                             //  se l'utente non ha ancora finito le vite aggiorno vite e punti, altrimenti notifico che ha perso
     if (vite > 0) { stampa(vite, punti); } 
     else { avvisa("Hai perso!", "Riprova"); }
   }
-  lcd.clear();                              //  aggiorno il record in caso sia stato appena fatto
+  lcd.clear();                              //  aggiorno il record in caso sia stato appena fatto e scrivo il punteggio appena fatto dall'utente
   if (punti > record) {
     record = punti;
     lcd.print("Nuovo record!");
