@@ -90,7 +90,7 @@ void loop() {                               //  ripristino vite, punti e tempo
                                             //  il ciclo si ripete fino a che l'utente non finisce le vite
   while (vite > 0) {
     if (random(1, 9) == 1) {                //  -- BONUS -- che esce con probabilità del 14% circa (1 volta su 8)
-      stampaChar(1,  1,  1,  50,  0);
+      stampaChar(1,  1,  0,  50,  0);
     } else if (random(1, 9) == 1) {         //  -- MALUS -- che esce con probabilità del 14% circa (1 volta su 8)
       stampaChar(2, -1, -2, -40,  0);
     } else {                                //  -- PIGRECO -- che esce come alternativa a BONUS e MALUS che escono con meno probabilità
@@ -106,10 +106,10 @@ void loop() {                               //  ripristino vite, punti e tempo
     lcd.print("Nuovo record!");
   }
   else{
-    lcd.print("Punteggio: " + String(punti));
+    lcd.print("Punteggio: " + String(punti) + " pt");
   }
                                             //  stampo il record ogni fine turno per mostrarlo all'utente
   lcd.setCursor(0, 1);
-  lcd.print("Record: " + String(record));
+  lcd.print("Record: " + String(record) + " pt");
   delay(2500);
 }
