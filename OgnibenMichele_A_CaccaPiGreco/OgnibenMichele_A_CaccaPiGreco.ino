@@ -13,15 +13,15 @@ int  punti;
 int  tempo;
 int  record;                        //  creazione di un nuovo carattere per il piGreco
 byte piGreco[8] = { B00000, B00000, B11111, B01010, B01010, B01010, B01001, B00000 };
-byte cuore[8]   = { B00000, B01010, B11111, B11111, B11111, B01110, B00100, B00000 };
-byte teschio[8] = { B01110, B11111, B10101, B11111, B11111, B01110, B01110, B00000 };
+byte bonus[8]   = { B00000, B01010, B11111, B11111, B11111, B01110, B00100, B00000 };
+byte malus[8]   = { B00000, B01110, B11111, B10101, B11111, B01010, B01110, B00000 };
 
 void setup() {
   lcd.init();
   lcd.backlight();
   lcd.createChar(0, piGreco);
-  lcd.createChar(1, cuore);
-  lcd.createChar(2, teschio);
+  lcd.createChar(1, bonus);
+  lcd.createChar(2, malus);
                                     //  assegnazione variabili
   record   = 0;
                                     //  pinMode di input
